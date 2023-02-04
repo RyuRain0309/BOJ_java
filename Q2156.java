@@ -22,4 +22,5 @@ public class Q2156 {
         }
         System.out.print(Math.max(dp[N-1][0],Math.max(dp[N-1][1],dp[N-1][2])));
     }
+
 }

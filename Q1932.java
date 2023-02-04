@@ -29,5 +29,6 @@ public class Q1932 {
             }
         }
         System.out.print(dp[0][0]);
+
     }
 }
