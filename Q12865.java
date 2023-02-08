@@ -33,6 +33,7 @@ public class Q12865 {
                 }
             }
         }
+
         System.out.print(dp[N][K]);
     }
 }
