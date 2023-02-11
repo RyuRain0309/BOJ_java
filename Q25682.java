@@ -11,7 +11,7 @@ public class Q25682 {
         int M = Integer.parseInt(st.nextToken());
         int[][] blackBoard = new int[N][M];
         int[][] whiteBoard = new int[N][M];
-        int K = Integer.parseInt(st.nextToken()) -1;
+        int K = Integer.parseInt(st.nextToken()) - 1;
         for(int i = 0 ; i < N ; i++){
             String s = br.readLine();
             for(int j = 0 ; j < M ; j++ ){
@@ -42,8 +42,8 @@ public class Q25682 {
             blackBoard[0][i] += blackBoard[0][i-1];
         }
         for(int i = 1 ; i < N ; i++){
-            whiteBoard[i][0] += whiteBoard[0][i-1];
-            blackBoard[i][0] += blackBoard[0][i-1];
+            whiteBoard[i][0] += whiteBoard[i-1][0];
+            blackBoard[i][0] += blackBoard[i-1][0];
         }
         for(int i = 1 ; i < N ; i++){
             for(int j = 1 ; j < M ; j++){
