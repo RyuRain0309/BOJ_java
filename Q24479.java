@@ -1,15 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q24479 {
     static int N;
     static int M;
     static int[] visited;
-    static LinkedList<PriorityQueue<Integer>> v = new LinkedList<>();
+    static ArrayList<ArrayList<Integer>> v = new ArrayList<>();
+    static int cnt = 1;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +18,7 @@ public class Q24479 {
         M = Integer.parseInt(st.nextToken());
         int start = Integer.parseInt(st.nextToken());
         for(int i = 0 ; i <= N ; i++){
-            v.add(new PriorityQueue<>());
+            v.add(new ArrayList<>());
         }
 
         for(int i = 0 ; i < M ;i++){
@@ -28,9 +27,11 @@ public class Q24479 {
             int to = Integer.parseInt(st.nextToken());
             v.get(from).add(to);
             v.get(to).add(from);
-
         }
-        dfs(start,1);
+        for(int i = 0 ; i < N ;i++){
+            Collections.sort(v.get(i));
+        }
+        dfs(start);
         StringBuilder sb = new StringBuilder();
         for(int i = 1 ; i <= N ; i++){
             sb.append(visited[i]).append("\n");
@@ -38,13 +39,12 @@ public class Q24479 {
         System.out.print(sb);
     }
 
-    private static void dfs(int node, int order) {
-        if(visited[node] != 0){
-            return;
-        }
-        visited[node] = order;
+    private static void dfs(int node) {
+        visited[node] = cnt++;
         for(Integer i : v.get(node)){
-            dfs(i,order+1);
+            if(visited[i] == 0){
+                dfs(i);
+            }
         }
     }
 }
