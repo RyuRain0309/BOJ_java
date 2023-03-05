@@ -35,32 +35,41 @@ public class Q1753 {
             }
         }
 
-        PriorityQueue<Integer> q = new PriorityQueue<>(Comparator.comparingInt(o -> res[o]));
-        q.add(start);
+        PriorityQueue<Pair> q = new PriorityQueue<>();
+        q.add(new Pair(start,0));
         res[start] = 0;
-        isVisited[start] = true;
 
         while (!q.isEmpty()){
-            int temp = q.poll();
-            for(Pair i : node.get(temp)){
-                res[i.vertex] = Math.min(res[i.vertex],res[temp] + i.weight);
-                if(!isVisited[i.vertex]){
-                    q.add(i.vertex);
-                    isVisited[i.vertex] = true;
+            Pair pair = q.poll();
+
+            if(isVisited[pair.vertex]){
+                continue;
+            }
+            isVisited[pair.vertex] = true;
+
+            for(Pair i : node.get(pair.vertex)){
+                if(res[i.vertex] > res[pair.vertex] + i.weight){
+                    res[i.vertex] = res[pair.vertex] + i.weight;
+                    q.add(new Pair(i.vertex,res[i.vertex]));
                 }
             }
         }
+
         for(int i = 1 ; i <= V ; i++){
             sb.append(res[i] == INF ? "INF" : res[i]).append("\n");
         }
         System.out.print(sb);
     }
-    private static class Pair{
+    private static class Pair implements Comparable<Pair>{
         final int vertex;
         final int weight;
         Pair(int vertex, int weight){
             this.vertex = vertex;
             this.weight = weight;
+        }
+        @Override
+        public int compareTo(Pair o) {
+            return weight - o.weight;
         }
     }
 }
