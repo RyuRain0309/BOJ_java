@@ -32,7 +32,7 @@ public class Q9252 {
 //            }
 //            System.out.println();
 //        }
-        StringBuilder ans = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         int y = s1.length();
         int x = s2.length();
         while (y > 0 || x > 0){
@@ -45,10 +45,11 @@ public class Q9252 {
             else{
                 x--;
                 y--;
-                ans.insert(0, s2.charAt(x));
+                sb.insert(0, s2.charAt(x));
             }
         }
-
-        System.out.print(dp[s1.length()][s2.length()] +"\n"+ans);
+        sb.insert(0,"\n");
+        sb.insert(0,dp[s1.length()][s2.length()]);
+        System.out.print(sb);
     }
 }
