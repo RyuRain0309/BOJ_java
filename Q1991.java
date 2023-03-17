@@ -39,7 +39,7 @@ public class Q1991 {
         for(int i : preoder){
             sb.append(i).append(" ");
         }
-        System.out.print(sb);
+        System.out.print(preoder);
     }
 
     private static void preoder(int pos) {
