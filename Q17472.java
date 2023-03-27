@@ -8,7 +8,9 @@ import java.util.StringTokenizer;
 
 public class Q17472 {
     static class Edge implements Comparable<Edge>{
-        int a, b, dist;
+        int a;
+        int b;
+        int dist;
         Edge(int a, int b, int dist){
             this.a = a;
             this.b = b;
@@ -19,12 +21,17 @@ public class Q17472 {
             return dist - o.dist;
         }
     }
-
-    static int N, M, cnt = -1;
-    static int[] rangeX = {1, 0, -1, 0}, rangeY = {0, 1, 0, -1}, parent;
-
-    static int[][] map, dist;
+    static int[] rangeX = {1, 0, -1, 0};
+    static int[] rangeY = {0, 1, 0, -1};
+    static int N;
+    static int M;
+    static int[][] map;
     static boolean[][] isVisited;
+    static int cnt = 1;
+    static int[] parent;
+    static int[][] dist;
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine()," ");
@@ -50,18 +57,20 @@ public class Q17472 {
         }
 
         parent = new int[cnt];
-        dist = new int[cnt][cnt];
-
         for(int i = 0 ; i < cnt ; i++){
             parent[i] = i;
-            Arrays.fill(dist[i],Integer.MAX_VALUE);
+        }
+        dist = new int[cnt][cnt];
+
+
+        for (int[] ints : dist) {
+            Arrays.fill(ints, Integer.MAX_VALUE);
         }
 
         for(int i = 0 ; i < N ; i++){
             for(int j = 0 ; j < M ; j++){
-                if(map[i][j] != 0) {
-                    getDist(i, j);
-                }
+                if(map[i][j] == 0) continue;
+                getDist(i,j);
             }
         }
 
@@ -73,13 +82,18 @@ public class Q17472 {
         }
 
         Collections.sort(edges);
+
+//        for(Edge edge : edges){
+//            System.out.println(edge.a + " " + edge.b + " " + edge.dist);
+//        }
+//        System.out.println();
+
         int edgeCnt = 0;
         int ans = 0;
 
         for(Edge edge : edges){
             if(edgeCnt == cnt-1) break;
             if(find(edge.a) == find(edge.b)) continue;
-
             if(edge.dist == Integer.MAX_VALUE){
                 System.out.print(-1);
                 System.exit(0);
@@ -112,31 +126,31 @@ public class Q17472 {
     }
 
     private static void getDist(int y, int x) {
-       int src = map[y][x];
-       for(int i = 0 ; i < 4 ; i++){
-           int moveY = y;
-           int moveX = x;
-           int distNow = 0;
-           while (true){
-               moveY += rangeY[i];
-               moveX += rangeX[i];
-               if(moveX < 0 || moveY < 0 || moveX >= M || moveY >= N) break;
-               int desVal = map[moveY][moveX];
-               if(desVal == src) break;
-               if(desVal != 0){
-                   if(distNow < 2) break;
+        int src = map[y][x];
+        for(int i = 0 ; i < 4 ; i++){
+            int moveY = y;
+            int moveX = x;
+            int distNow = 0;
+            while (true){
+                moveY += rangeY[i];
+                moveX += rangeX[i];
+                if(moveX < 0 || moveY < 0 || moveX >= M || moveY >= N) break;
+                int desVal = map[moveY][moveX];
+                if(desVal == src) break;
+                if(desVal != 0){
+                    if(distNow < 2) break;
 
-                   if(src > desVal){
-                       dist[desVal][src] = Math.min(dist[desVal][src],distNow);
-                   }
-                   else{
-                       dist[src][desVal] = Math.min(dist[src][desVal],distNow);
-                   }
-                   break;
-               }
-               distNow++;
-           }
-       }
+                    if(src > desVal){
+                        dist[desVal][src] = Math.min(dist[desVal][src],distNow);
+                    }
+                    else{
+                        dist[src][desVal] = Math.min(dist[src][desVal],distNow);
+                    }
+                    break;
+                }
+                distNow++;
+            }
+        }
     }
 
     private static void dfs(int y, int x) {
