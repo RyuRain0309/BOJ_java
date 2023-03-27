@@ -3,13 +3,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Q17472 {
     static class Edge implements Comparable<Edge>{
-        int a;
-        int b;
-        int dist;
+        int a, b, dist;
         Edge(int a, int b, int dist){
             this.a = a;
             this.b = b;
@@ -17,20 +16,15 @@ public class Q17472 {
         }
         @Override
         public int compareTo(Edge o) {
-            return dist = o.dist;
+            return dist - o.dist;
         }
     }
-    static int[] rangeX = {1, 0, -1, 0};
-    static int[] rangeY = {0, 1, 0, -1};
-    static int N;
-    static int M;
-    static int[][] map;
+
+    static int N, M, cnt = -1;
+    static int[] rangeX = {1, 0, -1, 0}, rangeY = {0, 1, 0, -1}, parent;
+
+    static int[][] map, dist;
     static boolean[][] isVisited;
-    static int cnt = 1;
-    static int[] parent;
-    static int[][] dist;
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine()," ");
@@ -57,38 +51,45 @@ public class Q17472 {
 
         parent = new int[cnt];
         dist = new int[cnt][cnt];
+
+        for(int i = 0 ; i < cnt ; i++){
+            parent[i] = i;
+            Arrays.fill(dist[i],Integer.MAX_VALUE);
+        }
+
         for(int i = 0 ; i < N ; i++){
             for(int j = 0 ; j < M ; j++){
-                if(map[i][j] == 0) continue;
-                reSet();
-                getDist(i,j,0,map[i][j]);
+                if(map[i][j] != 0) {
+                    getDist(i, j);
+                }
             }
         }
 
         ArrayList<Edge> edges = new ArrayList<>();
-        for(int i = 0 ; i < cnt ; i++){
+        for(int i = 1 ; i < cnt ; i++){
             for(int j = i+1 ; j < cnt ; j++){
                 edges.add(new Edge(i,j,dist[i][j]));
             }
         }
+
+        Collections.sort(edges);
         int edgeCnt = 0;
         int ans = 0;
+
         for(Edge edge : edges){
             if(edgeCnt == cnt-1) break;
             if(find(edge.a) == find(edge.b)) continue;
 
+            if(edge.dist == Integer.MAX_VALUE){
+                System.out.print(-1);
+                System.exit(0);
+            }
             union(edge.a,edge.b);
             ans += edge.dist;
             edgeCnt++;
         }
 
         System.out.print(ans);
-    }
-
-    private static void reSet() {
-        for(int i = 0 ; i < N ; i++){
-            Arrays.fill(isVisited[i],false);
-        }
     }
 
     private static void union(int a, int b) {
@@ -110,30 +111,32 @@ public class Q17472 {
         return parent[num] = find(parent[num]);
     }
 
-    private static void getDist(int y, int x, int cnt, int src) {
-        isVisited[y][x] = true;
+    private static void getDist(int y, int x) {
+       int src = map[y][x];
+       for(int i = 0 ; i < 4 ; i++){
+           int moveY = y;
+           int moveX = x;
+           int distNow = 0;
+           while (true){
+               moveY += rangeY[i];
+               moveX += rangeX[i];
+               if(moveX < 0 || moveY < 0 || moveX >= M || moveY >= N) break;
+               int desVal = map[moveY][moveX];
+               if(desVal == src) break;
+               if(desVal != 0){
+                   if(distNow < 2) break;
 
-        for(int i = 0 ; i < 4 ; i++){
-            int newY = y + rangeY[i];
-            int newX = x + rangeX[i];
-            if(newX < 0 || newY < 0 || newX >= M || newY >= N){
-                continue;
-            }
-            if(map[newY][newX] == src || isVisited[newY][newX]){
-                continue;
-            }
-            else if(map[newY][newX] == 0){
-                getDist(newY,newX,cnt+1,src);
-            }
-            else{
-                if(src < map[newY][newX]){
-                    dist[src][map[newY][newX]] = Math.min(dist[src][map[newY][newX]],cnt);
-                }
-                else{
-                    dist[map[newY][newX]][src] = Math.min(dist[map[newY][newX]][src],cnt);
-                }
-            }
-        }
+                   if(src > desVal){
+                       dist[desVal][src] = Math.min(dist[desVal][src],distNow);
+                   }
+                   else{
+                       dist[src][desVal] = Math.min(dist[src][desVal],distNow);
+                   }
+                   break;
+               }
+               distNow++;
+           }
+       }
     }
 
     private static void dfs(int y, int x) {
