@@ -11,30 +11,34 @@ public class Q1074 {
         int N = Integer.parseInt(st.nextToken());
         r = Integer.parseInt(st.nextToken());
         c = Integer.parseInt(st.nextToken());
-        N =
+        N = (int) Math.pow(2,N);
+//        System.out.println("N = " + N);
         recur(N/2);
         System.out.println(res);
     }
 
     private static void recur(int n) {
+//        System.out.println(n + " " + res + " " + r + " " + c);
         if( n == 1){
-            res += r + 2 * c;
+            res += 2*r + c;
             return;
         }
 
         if(r < n && c < n){  //1사분면
             recur(n/2);
-        } else if (r < n) {  //2사분면
-            res += n * n - 1;
-            r -= n;
-            recur(n/2);
-        } else if (c < n) {  //3사분면
-            res += 2*(n * n - 1);
+        }
+        else if (r < n) {  //3사분면
+            res += (n * n);
             c -= n;
             recur(n/2);
         }
+        else if (c < n) {  //2사분면
+            res += 2*(n * n);
+            r -= n;
+            recur(n/2);
+        }
         else{
-            res += 3*(n * n - 1);
+            res += 3*(n * n);
             r -= n;
             c -= n;
             recur(n/2);
