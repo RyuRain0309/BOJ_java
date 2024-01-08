@@ -10,7 +10,7 @@ public class Q1107 {
 
     static int channel = 100;
     static int res;
-    static int dest;
+    public static int dest;
     static ArrayList<Integer> broken = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
