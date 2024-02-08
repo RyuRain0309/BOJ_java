@@ -3,85 +3,89 @@ package BOJ_2023_11_Before;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q15686 {
-    static  int N, M, chickenHouse;
+
+    static int[] dy = {-1, 1, 0, 0};
+    static int[] dx = {0, 0, -1, 1};
+    static int N, M;
     static int[][] map;
     static int res = Integer.MAX_VALUE;
+    static ArrayList<ChickenShop> chickenShops = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        N = Integer.parseInt(st.nextToken());M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         map = new int[N][N];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-                if (map[i][j] == 2) {
-                    chickenHouse++;
+                int token = Integer.parseInt(st.nextToken());
+                if (token == 2) {
+                    chickenShops.add(new ChickenShop(i, j));
+                    map[i][j] = 0;
+                    continue;
                 }
+                map[i][j] = token;
             }
         }
-        backTracking(0,0, chickenHouse);
+        dfs(0, 0, 0);
 
         System.out.println(res);
     }
 
-    static void backTracking(int y, int x, int chick) {
-        if(chick == 0){
+    static void dfs(int depth, int cnt, int bit) {
+        if (cnt == M) {
+            bfs(bit);
             return;
         }
-        if(y >= N){
-            if(chick <= M) {
-                res = Math.min(res,getDist());
-            }
+        if (depth == chickenShops.size()) {
             return;
         }
-
-        if(map[y][x] != 2) {
-            if (x == N - 1) {
-                backTracking(y + 1, 0, chick);
-            } else {
-                backTracking(y, x + 1, chick);
-            }
-        }
-        else if(map[y][x] == 2){
-            map[y][x] = 0;
-            if (x == N - 1) {
-                backTracking(y + 1, 0, chick-1);
-            } else {
-                backTracking(y, x + 1, chick-1);
-            }
-
-            map[y][x] = 2;
-            if (x == N - 1) {
-                backTracking(y + 1, 0, chick);
-            } else {
-                backTracking(y, x + 1, chick);
-            }
-        }
+        dfs(depth + 1, cnt + 1, bit | (1 << depth));
+        dfs(depth + 1, cnt, bit);
     }
 
-    private static int getDist() {
-        int dist = 0;
-        for(int i = 0 ; i < N ; i++){
-            for(int j = 0 ; j < N ; j++){
-                if(map[i][j] == 1){
-                    int tempDist = Integer.MAX_VALUE;
-                    for(int i1 = 0 ; i1 < N ; i1++){
-                        for(int j1 = 0 ; j1 < N ; j1++){
-                            if(map[i1][j1] == 2){
-                                tempDist = Math.min(tempDist, Math.abs(i-i1) + Math.abs(j-j1));
-                            }
-                        }
+    private static void bfs(int bit) {
+        ChickenShop[] remain = new ChickenShop[M];
+        int index = 0;
+        int chickenDist = 0;
+        for (int i = 0; i < chickenShops.size(); i++) {
+            if ((bit & (1 << i)) == 0) {
+                continue;
+            }
+            remain[index++] = chickenShops.get(i);
+        }
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (map[i][j] == 1) {
+                    int temp = Integer.MAX_VALUE;
+                    for (ChickenShop chickenShop : remain) {
+                        temp = Math.min(temp, getDist(i, j, chickenShop));
                     }
-                    dist += tempDist;
+                    chickenDist += temp;
                 }
             }
         }
+        res = Math.min(res, chickenDist);
+    }
 
-        return dist;
+    private static int getDist(int y, int x, ChickenShop chickenShop) {
+        return Math.abs(y - chickenShop.y) + Math.abs(x - chickenShop.x);
+    }
+
+    private static class ChickenShop {
+        int y, x;
+
+        public ChickenShop(int y, int x) {
+            this.y = y;
+            this.x = x;
+        }
     }
 }
