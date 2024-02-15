@@ -60,6 +60,7 @@ public class Q1385 {
 //        }
 //        System.out.println();
         backTracking(sY,sX);
+        System.out.println(root[sY][sX]);
         System.out.println(sb);
     }
 
@@ -103,6 +104,8 @@ public class Q1385 {
                 break;
             }
         }
+
+        until = Math.min(until, 1_000_000);
 
         int y = 750;
         int x = 750;
