@@ -74,7 +74,7 @@ public class Q16236 {
                 }
                 return o1.y - o2.y;
             });
-            q.add(new Pos(fishes.getFirst().y, fishes.get(0).x, 0));
+            q.add(new Pos(fishes.getFirst().y, fishes.getFirst().x, 0));
             res += fishes.getFirst().cnt;
             map[fishes.getFirst().y][fishes.getFirst().x] = 0;
             eatFishNumber++;
