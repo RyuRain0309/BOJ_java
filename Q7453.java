@@ -8,44 +8,50 @@ public class Q7453 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
         StringTokenizer st;
-        ArrayList<Integer> A = new ArrayList<>();
-        ArrayList<Integer> B = new ArrayList<>();
-        ArrayList<Integer> C = new ArrayList<>();
-        ArrayList<Integer> D = new ArrayList<>();
-        Map<Integer, Integer> ABMap = new HashMap<>();
-        Map<Integer, Integer> CDMap = new HashMap<>();
+        int[] A = new int[N];
+        int[] B = new int[N];
+        int[] C = new int[N];
+        int[] D = new int[N];
+        int[] AB = new int[N * N];
+        int[] CD = new int[N * N];
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine(), " ");
-            A.add(Integer.parseInt(st.nextToken()));
-            B.add(Integer.parseInt(st.nextToken()));
-            C.add(Integer.parseInt(st.nextToken()));
-            D.add(Integer.parseInt(st.nextToken()));
+            A[i] = Integer.parseInt(st.nextToken());
+            B[i] = Integer.parseInt(st.nextToken());
+            C[i] = Integer.parseInt(st.nextToken());
+            D[i] = Integer.parseInt(st.nextToken());
         }
-
+        int index = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                int ApB = A.get(i) + B.get(j);
-                int CpD = C.get(i) + D.get(j);
-                ABMap.put(ApB, ABMap.getOrDefault(ApB, 0) + 1);
-                CDMap.put(CpD, CDMap.getOrDefault(CpD, 0) + 1);
+                AB[index] = A[i] + B[j];
+                CD[index] = C[i] + D[j];
+                index++;
             }
         }
-        ArrayList<Integer> AB = new ArrayList<>(ABMap.keySet());
-        Collections.sort(AB);
-        ArrayList<Integer> CD = new ArrayList<>(CDMap.keySet());
-        Collections.sort(CD);
+        Arrays.sort(AB);
+        Arrays.sort(CD);
         long res = 0;
-        int left = 0, right = CD.size() - 1;
-        while (left < AB.size() && right > 0) {
-            if (AB.get(left) + CD.get(right) < 0) {
+        int left = 0, right = CD.length - 1;
+        while (left < AB.length && right >= 0) {
+            if (AB[left] + CD[right] < 0) {
                 left++;
-            } else if (AB.get(left) + CD.get(right) > 0) {
+            } else if (AB[left] + CD[right] > 0) {
                 right--;
             } else {
-                res += (long) ABMap.get(AB.get(left)) * CDMap.get(CD.get(right));
                 left++;
                 right--;
+                long leftCnt = 1L, rightCnt = 1L;
+                while (left < AB.length && AB[left] == AB[left - 1]) {
+                    left++;
+                    leftCnt++;
+                }
+                while (right >= 0 && CD[right] == CD[right + 1]) {
+                    right--;
+                    rightCnt++;
+                }
+                res += leftCnt * rightCnt;
             }
         }
         System.out.println(res);
