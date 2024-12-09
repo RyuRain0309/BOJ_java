@@ -32,6 +32,11 @@ public class Q7453 {
         }
         Arrays.sort(AB);
         Arrays.sort(CD);
+        long res = solve(CD, AB);
+        System.out.println(res);
+    }
+
+    private static long solve(int[] CD, int[] AB) {
         long res = 0;
         int left = 0, right = CD.length - 1;
         while (left < AB.length && right >= 0) {
@@ -54,6 +59,6 @@ public class Q7453 {
                 res += leftCnt * rightCnt;
             }
         }
-        System.out.println(res);
+        return res;
     }
 }
