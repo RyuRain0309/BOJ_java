@@ -11,50 +11,57 @@ public class Q14888 {
     static int[] oper = new int[4];
     static int MAX = Integer.MIN_VALUE;
     static int MIN = Integer.MAX_VALUE;
-    public static void main(String[] args) throws IOException{
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         arr = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for(int i = 0 ; i < N ; i++){
+        for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
         st = new StringTokenizer(br.readLine());
-        for(int i = 0 ; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             oper[i] = Integer.parseInt(st.nextToken());
         }
-        result(2,0,1);
+        result(2, 0, 1);
         System.out.print(MAX + "\n" + MIN);
     }
 
     private static void result(int what, int n, int value) {
-        value = operate(what,n,value);
-        if(n==N-1){
-            if(value > MAX){
+        value = operate(what, n, value);
+        if (n == N - 1) {
+            if (value > MAX) {
                 MAX = value;
             }
-            if(value < MIN){
+            if (value < MIN) {
                 MIN = value;
             }
             return;
         }
 
-        for(int i = 0 ; i < 4 ; i++){
-            if(oper[i] > 0){
+        for (int i = 0; i < 4; i++) {
+            if (oper[i] > 0) {
                 oper[i]--;
-                result(i,n+1,value);
+                result(i, n + 1, value);
                 oper[i]++;
             }
         }
     }
 
-    private static int operate(int i,int n, int value) {
-        return switch (i) {
-            case 0 -> value + arr[n];
-            case 1 -> value - arr[n];
-            case 2 -> value * arr[n];
-            case 3 -> value / arr[n];
-            default -> 0;
-        };
+    private static int operate(int i, int n, int value) {
+        if (i == 0) {
+            return value + arr[n];
+        }
+        if (i == 1) {
+            return value - arr[n];
+        }
+        if (i == 2) {
+            return value * arr[n];
+        }
+        if (i == 3) {
+            return value / arr[n];
+        }
+        return 0;
     }
 }

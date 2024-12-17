@@ -43,7 +43,7 @@ public class Q16236 {
             while (!q.isEmpty()) {
                 Pos pos = q.poll();
                 pos.cnt++;
-                if (pos.cnt > breakCnt){
+                if (pos.cnt > breakCnt) {
                     q.clear();
                     break;
                 }
@@ -74,9 +74,9 @@ public class Q16236 {
                 }
                 return o1.y - o2.y;
             });
-            q.add(new Pos(fishes.getFirst().y, fishes.getFirst().x, 0));
-            res += fishes.getFirst().cnt;
-            map[fishes.getFirst().y][fishes.getFirst().x] = 0;
+            q.add(new Pos(fishes.get(0).y, fishes.get(0).x, 0));
+            res += fishes.get(0).cnt;
+            map[fishes.get(0).y][fishes.get(0).x] = 0;
             eatFishNumber++;
             if (sharkSize == eatFishNumber) {
                 sharkSize++;
